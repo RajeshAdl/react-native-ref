@@ -9,7 +9,7 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
 } from 'react-native';
 
 var Login = require('./Login')
@@ -17,7 +17,9 @@ var Login = require('./Login')
 export default class tutorial extends Component {
   render() {
     return (
-      <Login />
+      <View>
+        <Login />
+      </View>
     )
   }
 }

@@ -1,21 +1,28 @@
 'use strict'
 
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import buffer from 'buffer'
 import {
   StyleSheet,
   Text,
   View,
 	Image,
 	TextInput,
-  TouchableHighlight
-} from 'react-native';
+  TouchableHighlight,
+  ActivityIndicator
+} from 'react-native'
 
 class Login extends Component {
   constructor(props){
     super(props)
+
+    this.state = {
+      showProgress: false
+    }
   }
-  
+
   render() {
+    console.log(this.state.showProgress)
     return (
 			<View style={styles.container}>
 				<Image style={styles.logo}
@@ -23,15 +30,37 @@ class Login extends Component {
 				<Text style={styles.heading}>
 					Github browser
 				</Text>
-				<TextInput style={styles.input} placeholder="Github username" />
-				<TextInput style={styles.input} placeholder="Github password" secureTextEntry={ true } />
-				<TouchableHighlight style={styles.button}>
+				<TextInput style={styles.input} placeholder="Github username"
+          onChangeText={text => this.setState({username: text})}
+        />
+				<TextInput style={styles.input} placeholder="Github password" secureTextEntry={ true }
+          onChangeText={text => this.setState({password: text})}
+        />
+				<TouchableHighlight onPress={this.onLoginPress.bind(this)} style={styles.button}>
 					<Text style={styles.buttonText}>
 						Log in
 					</Text>
 				</TouchableHighlight>
+        <ActivityIndicator animating={ this.state.showProgress } size="large" style={styles.loader}/>
 			</View>
     )
+  }
+
+  onLoginPress() {
+    console.log("Login press, Username is " + this.state.username + " and Password is " + this.state.password)
+    let b = new buffer.Buffer('hello')
+    console.log(b.toString('base64'))
+    // this.setState({ showProgress: true })
+    // fetch('https://api.github.com/search/repositories?q=react')
+    // .then((response) => {
+    //   return response.json()
+    // })
+    // .then((results) => {
+    //   console.log(results)
+    // })
+    //
+    // this.setState({ showProgress: false })
+
   }
 }
 
@@ -70,7 +99,10 @@ var styles = StyleSheet.create({
 		fontSize: 22,
 		color: '#FFF',
 		alignSelf: 'center'
-	}
+	},
+  loader: {
+    marginTop: 30
+  }
 })
 
 module.exports = Login
