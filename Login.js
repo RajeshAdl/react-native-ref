@@ -1,15 +1,15 @@
 'use strict'
 
 import React, { Component } from 'react'
-import buffer from 'buffer'
+import buffer from 'buffer/'
 import {
   StyleSheet,
-  Text,
   View,
 	Image,
 	TextInput,
   TouchableHighlight,
-  ActivityIndicator
+  ActivityIndicator,
+  Text
 } from 'react-native'
 
 class Login extends Component {
@@ -22,7 +22,6 @@ class Login extends Component {
   }
 
   render() {
-    console.log(this.state.showProgress)
     return (
 			<View style={styles.container}>
 				<Image style={styles.logo}
@@ -47,30 +46,45 @@ class Login extends Component {
   }
 
   onLoginPress() {
-    console.log("Login press, Username is " + this.state.username + " and Password is " + this.state.password)
-    let b = new buffer.Buffer('hello')
-    console.log(b.toString('base64'))
-    // this.setState({ showProgress: true })
-    // fetch('https://api.github.com/search/repositories?q=react')
-    // .then((response) => {
-    //   return response.json()
-    // })
-    // .then((results) => {
-    //   console.log(results)
-    // })
-    //
-    // this.setState({ showProgress: false })
-
+    console.log("Attempting to log in " + this.state.username + " with Password " + this.state.password)
+    this.setState({ showProgress: true })
+    let b = new buffer.Buffer(this.state.username+':'+this.state.password)
+    let encodedAuth = b.toString('base64')
+    fetch('https://api.github.com/user',{
+      headers: {
+        Authorization: 'Basic '+encodedAuth
+      }
+    })
+    .then((response) => {
+      console.log(response.status)
+      if(response.status >= 200 && response.status < 300) {
+        return response
+      }
+      throw {
+        badCredentials: response.status == 401,
+        unknownError: response.status != 401
+      }
+    })
+    .then((results) => {
+      this.setState({ showProgress: false })
+    })
+    .catch((err) => {
+      console.log(err)
+      this.setState(err)
+    })
+    .finally(() => {
+      this.setState({ showProgress: false })
+    })
   }
 }
 
 var styles = StyleSheet.create({
 	container: {
+    flex: 1,
 		backgroundColor: '#F5FCFF',
-		flex: 1,
 		paddingTop: 40,
 		alignItems: 'center',
-		padding: 10
+		padding: 10,
 	},
 	logo: {
 		width: 66,
@@ -78,7 +92,8 @@ var styles = StyleSheet.create({
 	},
 	heading: {
 		fontSize: 30,
-		marginTop: 10
+		marginTop: 10,
+    height: 30
 	},
 	input: {
 		height: 50,
@@ -102,7 +117,14 @@ var styles = StyleSheet.create({
 	},
   loader: {
     marginTop: 30
-  }
+  },
+  baseText: {
+    fontFamily: 'Cochin',
+  },
+  titleText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
 })
 
 module.exports = Login
