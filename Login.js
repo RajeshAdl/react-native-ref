@@ -60,18 +60,21 @@ class Login extends Component {
   }
 
   onLoginPress() {
-    console.log("Attempting to log in " + this.state.username + " with Password " + this.state.password)
     this.setState({ showProgress: true })
     authService.login({username: this.state.username, password: this.state.password}, (results) => {
-      this.setState(Object.assign({showProgress: false}, results)
-      )
+      this.setState(Object.assign({
+        showProgress: false
+      }, results))
+      if(this.state.success && this.props.onLogin()) {
+        this.props.onLogin()
+      }
     })
   }
 }
 
 var styles = StyleSheet.create({
 	container: {
-    flex: 1,
+    //flex: 1,
 		backgroundColor: '#F5FCFF',
 		paddingTop: 40,
 		alignItems: 'center',
