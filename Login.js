@@ -9,7 +9,8 @@ import {
 	TextInput,
   TouchableHighlight,
   ActivityIndicator,
-  Text
+  Text,
+  Keyboard
 } from 'react-native'
 
 let authService = require('./AuthService')
@@ -36,26 +37,28 @@ class Login extends Component {
       </Text>
     }
     return (
-			<View style={styles.container}>
-				<Image style={styles.logo}
-					source={require('./images/Octocat.png')}/>
-				<Text style={styles.heading}>
-					Github browser
-				</Text>
-				<TextInput style={styles.input} placeholder="Github username"
-          onChangeText={text => this.setState({username: text})}
-        />
-				<TextInput style={styles.input} placeholder="Github password" secureTextEntry={ true }
-          onChangeText={text => this.setState({password: text})}
-        />
-				<TouchableHighlight onPress={this.onLoginPress.bind(this)} style={styles.button}>
-					<Text style={styles.buttonText}>
-						Log in
-					</Text>
-				</TouchableHighlight>
-        {errorCtrl}
-        <ActivityIndicator animating={ this.state.showProgress } size="large" style={styles.loader}/>
-			</View>
+      <TouchableHighlight onPress={() => Keyboard.dismiss()}>
+  			<View style={styles.container}>
+  				<Image style={styles.logo}
+  					source={require('./images/Octocat.png')}/>
+  				<Text style={styles.heading}>
+  					Github browser
+  				</Text>
+  				<TextInput style={styles.input} placeholder="Github username"
+            onChangeText={text => this.setState({username: text})}
+          />
+  				<TextInput style={styles.input} placeholder="Github password" secureTextEntry={ true }
+            onChangeText={text => this.setState({password: text})}
+          />
+  				<TouchableHighlight onPress={this.onLoginPress.bind(this)} style={styles.button}>
+  					<Text style={styles.buttonText}>
+  						Log in
+  					</Text>
+  				</TouchableHighlight>
+          {errorCtrl}
+          <ActivityIndicator animating={this.state.showProgress} size="large" style={styles.loader}/>
+  			</View>
+      </TouchableHighlight>
     )
   }
 
